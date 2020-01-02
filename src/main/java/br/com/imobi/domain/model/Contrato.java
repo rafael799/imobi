@@ -6,12 +6,14 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.groups.ConvertGroup;
-import javax.validation.groups.Default;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import br.com.imobi.core.validation.Groups;
+
+import javax.validation.groups.Default;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -19,12 +21,11 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 
 @Document(collection = "imovel")
-public class Imovel implements Serializable {
+public class Contrato implements Serializable {
 	
-	private static final long serialVersionUID = 1L;
+private static final long serialVersionUID = 1L;
 	
 	@Id
-	@NotNull(groups = Groups.ContratoGroup.class)
 	@EqualsAndHashCode.Include
 	private Long id;
 	
@@ -34,6 +35,16 @@ public class Imovel implements Serializable {
 	@Valid
 	@NotNull
 	@ConvertGroup(from = Default.class, to = Groups.ContratoGroup.class)
-	private Endereco endereco;
+	private Imovel imovel;
+	
+	@Valid
+	@NotNull
+	@ConvertGroup(from = Default.class, to = Groups.ContratoGroup.class)
+	private Locador locador;
+	
+	@Valid
+	@NotNull
+	@ConvertGroup(from = Default.class, to = Groups.ContratoGroup.class)
+	private Locatario locatario;
 
 }

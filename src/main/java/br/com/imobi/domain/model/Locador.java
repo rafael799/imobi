@@ -18,8 +18,8 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 
-@Document(collection = "imovel")
-public class Imovel implements Serializable {
+@Document(collection = "locador")
+public class Locador implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -29,7 +29,7 @@ public class Imovel implements Serializable {
 	private Long id;
 	
 	@NotBlank
-	private String descricao;
+	private String nome;
 	
 	@Valid
 	@NotNull
