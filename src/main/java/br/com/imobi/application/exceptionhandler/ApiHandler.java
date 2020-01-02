@@ -19,9 +19,9 @@ public class ApiHandler {
 	private String title;
 	private String detail;
 
+	//IMPLEMENTARION
 	private String userMessage;
 	private LocalDateTime timestamp;
-
 	private List<Field> fields;
 
 	@Getter
