@@ -1,17 +1,22 @@
 package br.com.imobi.domain.service;
 
+import java.lang.reflect.Field;
 import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.Map;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ReflectionUtils;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import br.com.imobi.domain.exception.imovel.ImovelNotFoundException;
+import br.com.imobi.domain.exception.imovel.ImovelUseException;
 import br.com.imobi.domain.model.Imovel;
-import br.com.imobi.infrastructure.ImovelRepository;
+import br.com.imobi.domain.repository.ImovelRepository;
 
 @Service
 public class ImovelService {
@@ -23,44 +28,50 @@ public class ImovelService {
 		return repository.save(imovel);
 	}
 
-	public ResponseEntity<Imovel> remove(Long id) {
-		try {
-
-			Imovel imovel = repository.findById(id).get();
-			repository.delete(imovel);
-			return ResponseEntity.noContent().build();
-
-		} catch (DataIntegrityViolationException e) {
-			return ResponseEntity.status(HttpStatus.CONFLICT).build();
-		} catch (NoSuchElementException e) {
-			return ResponseEntity.notFound().build();
-		}
-	}
-
-	public ResponseEntity<Imovel> update(Long id, Imovel imovel) {
-		try {
-			Imovel imovelAtual = repository.findById(id).get();
-
-			BeanUtils.copyProperties(imovel, imovelAtual, "id");
-			imovelAtual = repository.save(imovelAtual);
-			return ResponseEntity.ok(imovelAtual);
-
-		} catch (NoSuchElementException e) {
-			return ResponseEntity.notFound().build();
-		}
+	public Imovel update(Long id, Imovel imovel) {
+		Imovel imovelAtual = findOrNull(id);
+		BeanUtils.copyProperties(imovel, imovelAtual, "id");
+		return repository.save(imovelAtual);
 	}
 
 	public List<Imovel> getAll() {
 		return repository.findAll();
 	}
 
-	public ResponseEntity<Imovel> getById(Long id) {
+	public Imovel getById(Long id) {
+		return repository.findById(id).orElseThrow(() -> new ImovelNotFoundException(id));
+	}
+
+	public void remove(Long id) {
 		try {
-			Imovel imovel = repository.findById(id).get();
-			return ResponseEntity.ok(imovel);
-		} catch (NoSuchElementException e) {
-			return ResponseEntity.notFound().build();
+
+			Imovel imovel = findOrNull(id);
+			repository.delete(imovel);
+
+		} catch (EmptyResultDataAccessException e) {
+			throw new ImovelNotFoundException(id);
+
+		} catch (DataIntegrityViolationException e) {
+			throw new ImovelUseException(id);
+
 		}
+
+	}
+
+	public Imovel findOrNull(Long id) {
+		return repository.findById(id).orElseThrow(() -> new ImovelNotFoundException(id));
+	}
+
+	public void merge(Map<String, Object> fields, Imovel imovelUpdate) {
+		ObjectMapper objectMapper = new ObjectMapper();
+		Imovel imovelOrigin = objectMapper.convertValue(fields, Imovel.class);
+
+		fields.forEach((nameProperties, valorProperties) -> {
+			Field field = ReflectionUtils.findField(Imovel.class, nameProperties);
+			field.setAccessible(true);
+			Object novoValor = ReflectionUtils.getField(field, imovelOrigin);
+			ReflectionUtils.setField(field, imovelUpdate, novoValor);
+		});
 	}
 
 }
