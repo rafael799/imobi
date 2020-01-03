@@ -10,10 +10,10 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ReflectionUtils;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -30,10 +30,12 @@ public class ImovelService {
 	@Autowired
 	private ImovelRepository repository;
 
+	@Transactional
 	public Imovel save(Imovel imovel) {
 		return repository.save(imovel);
 	}
 
+	@Transactional
 	public Imovel update(Long id, Imovel imovel) {
 		Imovel imovelAtual = findOrNull(id);
 		BeanUtils.copyProperties(imovel, imovelAtual, "id");
@@ -45,23 +47,35 @@ public class ImovelService {
 	}
 
 	public Imovel getById(Long id) {
-		return repository.findById(id).orElseThrow(() -> new ImovelNotFoundException(id));
+		return findOrNull(id);
 	}
-
+	
+	@Transactional
 	public void remove(Long id) {
 		try {
 
 			Imovel imovel = findOrNull(id);
 			repository.delete(imovel);
 
-		} catch (EmptyResultDataAccessException e) {
-			throw new ImovelNotFoundException(id);
-
 		} catch (DataIntegrityViolationException e) {
 			throw new ImovelUseException(id);
 
 		}
 
+	}
+	
+	@Transactional
+	public void activate(Long id) {
+		Imovel imovel = findOrNull(id);
+		imovel.activate();
+		repository.save(imovel);
+	}
+	
+	@Transactional
+	public void inactivate(Long id) {
+		Imovel imovel = findOrNull(id);
+		imovel.inactivate();
+		repository.save(imovel);
 	}
 
 	public Imovel findOrNull(Long id) {

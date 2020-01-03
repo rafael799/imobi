@@ -5,12 +5,11 @@ import java.util.List;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.imobi.domain.exception.contrato.ContratoNotFoundException;
-import br.com.imobi.domain.exception.imovel.ImovelNotFoundException;
-import br.com.imobi.domain.exception.imovel.ImovelUseException;
+import br.com.imobi.domain.exception.locatario.LocatarioUseException;
 import br.com.imobi.domain.model.Locatario;
 import br.com.imobi.domain.repository.LocatarioRepository;
 
@@ -20,10 +19,12 @@ public class LocatarioService {
 	@Autowired
 	private LocatarioRepository locatarioRepository;
 	
+	@Transactional
 	public Locatario save(Locatario locatario) {
 		return locatarioRepository.save(locatario);
 	}
 
+	@Transactional
 	public Locatario update(Long id, Locatario locatario) {
 		Locatario locatarioAtual = findOrNull(id);
 		BeanUtils.copyProperties(locatario, locatarioAtual, "id");
@@ -35,18 +36,17 @@ public class LocatarioService {
 	}
 
 	public Locatario getById(Long id) {
-		return locatarioRepository.findById(id).orElseThrow(() -> new ContratoNotFoundException(id));
+		return findOrNull(id);
 	}
 
+	@Transactional
 	public void remove(Long id) {
 		try {
 			Locatario locatario = findOrNull(id);
 			locatarioRepository.delete(locatario);
-		} catch (EmptyResultDataAccessException e) {
-			throw new ImovelNotFoundException(id);
 
 		} catch (DataIntegrityViolationException e) {
-			throw new ImovelUseException(id);
+			throw new LocatarioUseException(id);
 		}
 	}
 

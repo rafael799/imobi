@@ -35,5 +35,15 @@ public class Imovel implements Serializable {
 	@NotNull
 	@ConvertGroup(from = Default.class, to = Groups.ContratoGroup.class)
 	private Endereco endereco;
+	
+	private Boolean ativo = Boolean.TRUE;
+	
+	public void activate() {
+		setAtivo(true);
+	}
+	
+	public void inactivate() {
+		setAtivo(false);
+	}
 
 }

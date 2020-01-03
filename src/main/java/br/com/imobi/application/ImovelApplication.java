@@ -29,13 +29,13 @@ public class ImovelApplication {
 	@Autowired
 	private ImovelService service;
 
-	@PostMapping("/add")
+	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public Imovel save(@RequestBody @Valid Imovel imovel) {
 		return service.save(imovel);
 	}
 
-	@GetMapping("/findAll")
+	@GetMapping
 	public List<Imovel> getAll() {
 		return service.getAll();
 	}
@@ -51,7 +51,7 @@ public class ImovelApplication {
 		return service.update(id, imovel);
 	}
 
-	@GetMapping("/findById/{id}")
+	@GetMapping("/{id}")
 	public Imovel getById(@PathVariable Long id) {
 		return service.findOrNull(id);
 	}
@@ -62,5 +62,18 @@ public class ImovelApplication {
 		service.merge(fields, imovel,request);
 		return update(id, imovel);
 	}
+	
+	@PutMapping("/{id}/active")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void ativar(@PathVariable Long id) {
+		service.activate(id);
+	}
+	
+	@DeleteMapping("/{id}/active")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void inativar(@PathVariable Long id) {
+		service.inactivate(id);
+	}
+
 
 }

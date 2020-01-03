@@ -26,13 +26,13 @@ public class ContratoApplication {
 	@Autowired
 	private ContratoService service;
 
-	@PostMapping("/add")
+	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public Contrato save(@RequestBody @Valid Contrato contrato) {
 		return service.save(contrato);
 	}
 
-	@GetMapping("/findAll")
+	@GetMapping
 	public List<Contrato> getAll() {
 		return service.getAll();
 	}
@@ -48,7 +48,7 @@ public class ContratoApplication {
 		return service.update(id, contrato);
 	}
 
-	@GetMapping("/findById/{id}")
+	@GetMapping("/{id}")
 	public Contrato getById(@PathVariable Long id) {
 		return service.findOrNull(id);
 	}
