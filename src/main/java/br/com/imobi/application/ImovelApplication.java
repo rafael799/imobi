@@ -40,40 +40,52 @@ public class ImovelApplication {
 		return service.getAll();
 	}
 
-	@DeleteMapping("/{id}")
+	@DeleteMapping("/{code}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void remove(@PathVariable Long id) {
-		service.remove(id);
+	public void remove(@PathVariable String code) {
+		service.remove(code);
 	}
 
-	@PutMapping("/{id}")
-	public Imovel update(@PathVariable Long id, @RequestBody @Valid Imovel imovel) {
-		return service.update(id, imovel);
+	@PutMapping("/{code}")
+	public Imovel update(@PathVariable String code, @RequestBody @Valid Imovel imovel) {
+		return service.update(code, imovel);
 	}
 
-	@GetMapping("/{id}")
-	public Imovel getById(@PathVariable Long id) {
-		return service.findOrNull(id);
+	@GetMapping("/{code}")
+	public Imovel getByCode(@PathVariable String code) {
+		return service.findOrNull(code);
 	}
 
-	@PatchMapping("/{id}")
-	public Imovel updatePar(@PathVariable Long id, @RequestBody Map<String, Object> fields,HttpServletRequest request) {
-		Imovel imovel = service.getById(id);
-		service.merge(fields, imovel,request);
-		return update(id, imovel);
+	@PatchMapping("/{code}")
+	public Imovel updatePar(@PathVariable String code, @RequestBody Map<String, Object> fields,
+			HttpServletRequest request) {
+		Imovel imovel = service.getByCode(code);
+		service.merge(fields, imovel, request);
+		return update(code, imovel);
 	}
-	
-	@PutMapping("/{id}/active")
+
+	@PutMapping("/{code}/active")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void ativar(@PathVariable Long id) {
-		service.activate(id);
-	}
-	
-	@DeleteMapping("/{id}/active")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void inativar(@PathVariable Long id) {
-		service.inactivate(id);
+	public void ativar(@PathVariable String code) {
+		service.activate(code);
 	}
 
+	@DeleteMapping("/{code}/active")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void inativar(@PathVariable String code) {
+		service.inactivate(code);
+	}
+
+	@PutMapping("/actives")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void ativarMultiplos(@RequestBody List<String> codes) {
+		service.activate(codes);
+	}
+
+	@DeleteMapping("/actives")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void inativarMultiplos(@RequestBody List<String> codes) {
+		service.inactivate(codes);
+	}
 
 }

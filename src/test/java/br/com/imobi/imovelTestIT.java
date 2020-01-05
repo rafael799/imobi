@@ -38,7 +38,7 @@ public class imovelTestIT {
 	
 	@Test(expected = ImovelNotFoundException.class)
 	public void deveFalhar_QuandoExcluirImovelInexistente() {
-		imovelService.remove(500l);
+		imovelService.remove("460f6bca-138f-438c-aca6-efb1e5416c90");
 	}
 	
 	

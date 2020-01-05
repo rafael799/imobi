@@ -28,6 +28,9 @@ public class Imovel implements Serializable {
 	@EqualsAndHashCode.Include
 	private Long id;
 	
+	@NotNull
+	private String code;
+	
 	@NotBlank
 	private String descricao;
 	

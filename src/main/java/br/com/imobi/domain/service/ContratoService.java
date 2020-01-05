@@ -33,7 +33,7 @@ public class ContratoService {
 
 	@Transactional
 	public Contrato save(Contrato contrato) {
-		Imovel imovel = imovelService.findOrNull(contrato.getImovel().getId());
+		Imovel imovel = imovelService.findOrNull(contrato.getImovel().getCode());
 		Locatario locatario = locatarioService.findOrNull(contrato.getLocatario().getId());
 		Locador locador = locadorService.findOrNull(contrato.getLocador().getId());
 		contrato.setImovel(imovel);

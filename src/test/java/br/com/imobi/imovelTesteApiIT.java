@@ -35,7 +35,7 @@ public class imovelTesteApiIT {
 	@Test
 	public void deveRetornarStatus200_QuandoConsultarImoveis() {
 		given()
-			.basePath("/imoveis/findAll")
+			.basePath("/imoveis")
 			.accept(ContentType.JSON)
 		.when()
 			.get()
@@ -46,7 +46,7 @@ public class imovelTesteApiIT {
 	@Test
 	public void deveConter7Imoveis_QuandoConsultarImoveis() {
 		given()
-			.basePath("/imoveis/findAll")
+			.basePath("/imoveis")
 			.accept(ContentType.JSON)
 		.when()
 			.get()
@@ -58,8 +58,8 @@ public class imovelTesteApiIT {
 	@Test
 	public void testRetornarStatus201_QuandoCadastrarImovel() {
 		given()
-			.basePath("/imoveis/add")
-			.body("{\"id\":\"100\",\"descricao\":\"oi\",\"endereco\": {\"id\":\"1\",\"logradouro\":\"teste\",\"cidade\":\"teste\",\"bairro\":\"teste\",\"numero\": 1,\"cep\": 1}}")
+			.basePath("/imoveis")
+			.body("{\"id\":\"100\",\"descricao\":\"oi\",\"code\":\"b2572bff-77ee-4b24-a3a5-a8ae6431dee8\"\"endereco\": {\"id\":\"1\",\"logradouro\":\"teste\",\"cidade\":\"teste\",\"bairro\":\"teste\",\"numero\": 1,\"cep\": 1}}")
 			.contentType(ContentType.JSON)
 			.accept(ContentType.JSON)
 		.when()
@@ -71,11 +71,11 @@ public class imovelTesteApiIT {
 	@Test
 	public void deveRetornarRespostaEStatusCorretos_QuandoConsultarImovelExistente() {
 		given()
-			.basePath("/imoveis/findById")
-			.pathParam("id", 100)
+			.basePath("/imoveis")
+			.pathParam("code", "460f6bca-138f-438c-aca6-efb1e5416c90")
 			.accept(ContentType.JSON)
 		.when()
-			.get("/{id}")
+			.get("/{code}")
 		.then()
 			.statusCode(HttpStatus.OK.value());
 	}
@@ -83,11 +83,11 @@ public class imovelTesteApiIT {
 	@Test
 	public void deveRetornarStatus404_QuandoConsultarCozinhaInexistente() {
 		given()
-			.basePath("/imoveis/findById")
-			.pathParam("id", 999)
+			.basePath("/imoveis")
+			.pathParam("code", "460f6bca-138f-438c-aca6-efb1e5416c903")
 			.accept(ContentType.JSON)
 		.when()
-			.get("/{id}")
+			.get("/{code}")
 		.then()
 			.statusCode(HttpStatus.NOT_FOUND.value());
 	}

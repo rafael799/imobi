@@ -1,6 +1,7 @@
 package br.com.imobi.domain.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
@@ -12,6 +13,8 @@ import br.com.imobi.domain.model.Imovel;
 public interface ImovelRepository extends MongoRepository<Imovel, Long>, ImovelRepositoryQueries {
 	
 	List<Imovel> findBydescricao(String descricao);
+	
+	Optional<Imovel> findBycode(String descricao);
 	
 	Imovel findFirstBydescricao(String descricao);
 	

@@ -36,8 +36,8 @@ public class ImovelService {
 	}
 
 	@Transactional
-	public Imovel update(Long id, Imovel imovel) {
-		Imovel imovelAtual = findOrNull(id);
+	public Imovel update(String code, Imovel imovel) {
+		Imovel imovelAtual = findOrNull(code);
 		BeanUtils.copyProperties(imovel, imovelAtual, "id");
 		return repository.save(imovelAtual);
 	}
@@ -46,40 +46,50 @@ public class ImovelService {
 		return repository.findAll();
 	}
 
-	public Imovel getById(Long id) {
-		return findOrNull(id);
+	public Imovel getByCode(String code) {
+		return findOrNull(code);
 	}
 	
 	@Transactional
-	public void remove(Long id) {
+	public void remove(String code) {
 		try {
 
-			Imovel imovel = findOrNull(id);
+			Imovel imovel = findOrNull(code);
 			repository.delete(imovel);
 
 		} catch (DataIntegrityViolationException e) {
-			throw new ImovelUseException(id);
+			throw new ImovelUseException(code);
 
 		}
 
 	}
 	
 	@Transactional
-	public void activate(Long id) {
-		Imovel imovel = findOrNull(id);
+	public void activate(String code) {
+		Imovel imovel = findOrNull(code);
 		imovel.activate();
 		repository.save(imovel);
 	}
 	
 	@Transactional
-	public void inactivate(Long id) {
-		Imovel imovel = findOrNull(id);
+	public void inactivate(String code) {
+		Imovel imovel = findOrNull(code);
 		imovel.inactivate();
 		repository.save(imovel);
 	}
+	
+	@Transactional
+	public void activate(List<String> codes) {
+		codes.forEach(this::activate);
+	}
+	
+	@Transactional
+	public void inactivate(List<String> codes) {
+		codes.forEach(this::inactivate);
+	}
 
-	public Imovel findOrNull(Long id) {
-		return repository.findById(id).orElseThrow(() -> new ImovelNotFoundException(id));
+	public Imovel findOrNull(String code) {
+		return repository.findBycode(code).orElseThrow(() -> new ImovelNotFoundException(code));
 	}
 
 	public void merge(Map<String, Object> fields, Imovel imovelUpdate,HttpServletRequest request) {
