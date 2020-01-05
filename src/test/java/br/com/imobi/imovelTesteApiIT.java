@@ -59,7 +59,7 @@ public class imovelTesteApiIT {
 	public void testRetornarStatus201_QuandoCadastrarImovel() {
 		given()
 			.basePath("/imoveis")
-			.body("{\"id\":\"100\",\"descricao\":\"oi\",\"code\":\"b2572bff-77ee-4b24-a3a5-a8ae6431dee8\"\"endereco\": {\"id\":\"1\",\"logradouro\":\"teste\",\"cidade\":\"teste\",\"bairro\":\"teste\",\"numero\": 1,\"cep\": 1}}")
+			.body("{\"id\": 1009,\"descricao\": \"dois\",\"endereco\": {\"id\": 1,\"logradouro\": \"teste\",\"cidade\": \"teste\",\"bairro\": \"teste\",\"numero\": 1,\"cep\": 1,\"uf\": null},\"ativo\": true,\"code\": \"460f6bca-138f-438c-aca6-efb1e5416c90\"}")
 			.contentType(ContentType.JSON)
 			.accept(ContentType.JSON)
 		.when()
